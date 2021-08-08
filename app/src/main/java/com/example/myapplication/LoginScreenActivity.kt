@@ -7,10 +7,7 @@ import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
 import com.example.myapplication.databinding.ActivityLoginScreenBinding
-import com.facebook.CallbackManager
-import com.facebook.FacebookCallback
-import com.facebook.FacebookException
-import com.facebook.FacebookSdk
+import com.facebook.*
 import com.facebook.appevents.AppEventsLogger
 import com.facebook.login.LoginManager
 import com.facebook.login.LoginResult
@@ -26,6 +23,7 @@ import com.google.android.gms.tasks.Task
 class LoginScreenActivity : AppCompatActivity() {
     lateinit var mGoogleSignInClient : GoogleSignInClient
     lateinit var binding : ActivityLoginScreenBinding
+    private var callbackManager : CallbackManager ? = null
     val RC_SIGN_IN : Int = 100
     private val EMAIL = "email"
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -41,10 +39,16 @@ class LoginScreenActivity : AppCompatActivity() {
                 .build()
             mGoogleSignInClient = GoogleSignIn.getClient(this, gso)
             val account = GoogleSignIn.getLastSignedInAccount(this)
-            signIn();
+            signIn()
+
 
 
         })
+        binding.fbLoginButton.setOnClickListener({
+            Toast.makeText(applicationContext, "Button Clicked", Toast.LENGTH_SHORT).show()
+//            facebookLogin()
+        })
+
 
     }
 
@@ -56,12 +60,11 @@ class LoginScreenActivity : AppCompatActivity() {
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
         if (requestCode == RC_SIGN_IN) {
-            // The Task returned from this call is always completed, no need to attach
-            // a listener.
             val task: Task<GoogleSignInAccount> =
                 GoogleSignIn.getSignedInAccountFromIntent(data)
             handleSignInResult(task)
         }
+//        callbackManager?.onActivityResult(requestCode,resultCode,data)
     }
 
     private fun handleSignInResult(task: Task<GoogleSignInAccount>) {
@@ -70,13 +73,11 @@ class LoginScreenActivity : AppCompatActivity() {
             val info = GoogleSignIn.getLastSignedInAccount(this)
             if (info != null) {
                 val personName = info.displayName
-                val personGivenName = info.givenName
-                val personFamilyName = info.familyName
                 val personEmail = info.email
                 val personId = info.id
-                var personPhoto : Uri ? = info.photoUrl
+                val personPhoto : Uri ? = info.photoUrl
                 val photoUrl = personPhoto.toString()
-                var intent = Intent(applicationContext,LoginDetailsActivity::class.java)
+                val intent = Intent(applicationContext,LoginDetailsActivity::class.java)
                 intent.putExtra("id",personId)
                 intent.putExtra("personname",personName)
                 intent.putExtra("email",personEmail)
@@ -94,6 +95,59 @@ class LoginScreenActivity : AppCompatActivity() {
 
 
     }
+//    private fun facebookLogin(){
+//        binding.fbLoginButton.setPermissions(arrayListOf(EMAIL))
+//        callbackManager = CallbackManager.Factory.create()
+//        binding.fbLoginButton.registerCallback(callbackManager,
+//            object : FacebookCallback<LoginResult?> {
+//                override fun onSuccess(loginResult: LoginResult?) {
+//
+//
+//                }
+//
+//                override fun onCancel() {
+//                    Toast.makeText(
+//                        applicationContext,
+//                        "Something Went wrong",
+//                        Toast.LENGTH_SHORT
+//                    ).show()
+//                }
+//
+//                override fun onError(error: FacebookException?) {
+//                    Toast.makeText(
+//                        applicationContext,
+//                        "Something Went wrong",
+//                        Toast.LENGTH_SHORT
+//                    ).show()
+//                }
+//
+//            })
+//        callbackManager = CallbackManager.Factory.create()
+//        LoginManager.getInstance().registerCallback(callbackManager,
+//            object : FacebookCallback<LoginResult?> {
+//                override fun onSuccess(loginResult: LoginResult?) {
+//                    val accessToken = AccessToken.getCurrentAccessToken()
+//                    if (accessToken != null && !accessToken.isExpired) {
+//                        var intent =
+//                            Intent(applicationContext, LoginDetailsActivity::class.java)
+//                        var id: String? = loginResult?.accessToken?.userId
+//                        var photoUrl : String ? = "https://graph.facebook.com/" + loginResult?.accessToken?.userId + "/picture?return_ssl_resources=1"
+//                        intent.putExtra("id", id)
+//                        intent.putExtra("photo",photoUrl)
+//                        startActivity(intent)
+//                    }
+//
+//                }
+//
+//                override fun onCancel() { // App code
+//                }
+//
+//                override fun onError(exception: FacebookException) { // App code
+//                }
+//
+//            })
+//
+//    }
 
 
 }
