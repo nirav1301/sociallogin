@@ -3,6 +3,7 @@ package com.example.myapplication
 import android.Manifest
 import android.content.pm.PackageManager
 import android.os.Bundle
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.databinding.DataBindingUtil
@@ -59,24 +60,18 @@ class GoogleMapActivity : AppCompatActivity() {
                 Manifest.permission.ACCESS_COARSE_LOCATION
             ) != PackageManager.PERMISSION_GRANTED
         ) {
-            // TODO: Consider calling
-            //    ActivityCompat#requestPermissions
-            // here to request the missing permissions, and then overriding
-            //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
-            //                                          int[] grantResults)
-            // to handle the case where the user grants the permission. See the documentation
-            // for ActivityCompat#requestPermissions for more details.
+            Toast.makeText(applicationContext, "Map Failed", Toast.LENGTH_SHORT).show()
             return
         }
-        else{
+
             val task = client!!.lastLocation
             task.addOnSuccessListener { location ->
                 smf!!.getMapAsync { googleMap ->
-                    val latLng = LatLng(location.latitude, location.longitude)
+                    val latLng  = LatLng(location.latitude, location.longitude)
                     val markerOptions = MarkerOptions().position(latLng).title("You are here...!!")
                     googleMap.addMarker(markerOptions)
                     googleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(latLng, 17f))
-                }
+
             }
         }
 

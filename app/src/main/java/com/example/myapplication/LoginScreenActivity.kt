@@ -45,8 +45,8 @@ class LoginScreenActivity : AppCompatActivity() {
 
         })
         binding.fbLoginButton.setOnClickListener({
-            Toast.makeText(applicationContext, "Button Clicked", Toast.LENGTH_SHORT).show()
-//            facebookLogin()
+
+            facebookLogin()
         })
 
 
@@ -64,7 +64,7 @@ class LoginScreenActivity : AppCompatActivity() {
                 GoogleSignIn.getSignedInAccountFromIntent(data)
             handleSignInResult(task)
         }
-//        callbackManager?.onActivityResult(requestCode,resultCode,data)
+        callbackManager?.onActivityResult(requestCode,resultCode,data)
     }
 
     private fun handleSignInResult(task: Task<GoogleSignInAccount>) {
@@ -77,7 +77,7 @@ class LoginScreenActivity : AppCompatActivity() {
                 val personId = info.id
                 val personPhoto : Uri ? = info.photoUrl
                 val photoUrl = personPhoto.toString()
-                val intent = Intent(applicationContext,LoginDetailsActivity::class.java)
+                val intent = Intent(applicationContext,FacebookActivity::class.java)
                 intent.putExtra("id",personId)
                 intent.putExtra("personname",personName)
                 intent.putExtra("email",personEmail)
@@ -95,59 +95,59 @@ class LoginScreenActivity : AppCompatActivity() {
 
 
     }
-//    private fun facebookLogin(){
-//        binding.fbLoginButton.setPermissions(arrayListOf(EMAIL))
-//        callbackManager = CallbackManager.Factory.create()
-//        binding.fbLoginButton.registerCallback(callbackManager,
-//            object : FacebookCallback<LoginResult?> {
-//                override fun onSuccess(loginResult: LoginResult?) {
-//
-//
-//                }
-//
-//                override fun onCancel() {
-//                    Toast.makeText(
-//                        applicationContext,
-//                        "Something Went wrong",
-//                        Toast.LENGTH_SHORT
-//                    ).show()
-//                }
-//
-//                override fun onError(error: FacebookException?) {
-//                    Toast.makeText(
-//                        applicationContext,
-//                        "Something Went wrong",
-//                        Toast.LENGTH_SHORT
-//                    ).show()
-//                }
-//
-//            })
-//        callbackManager = CallbackManager.Factory.create()
-//        LoginManager.getInstance().registerCallback(callbackManager,
-//            object : FacebookCallback<LoginResult?> {
-//                override fun onSuccess(loginResult: LoginResult?) {
-//                    val accessToken = AccessToken.getCurrentAccessToken()
-//                    if (accessToken != null && !accessToken.isExpired) {
-//                        var intent =
-//                            Intent(applicationContext, LoginDetailsActivity::class.java)
-//                        var id: String? = loginResult?.accessToken?.userId
-//                        var photoUrl : String ? = "https://graph.facebook.com/" + loginResult?.accessToken?.userId + "/picture?return_ssl_resources=1"
-//                        intent.putExtra("id", id)
-//                        intent.putExtra("photo",photoUrl)
-//                        startActivity(intent)
-//                    }
-//
-//                }
-//
-//                override fun onCancel() { // App code
-//                }
-//
-//                override fun onError(exception: FacebookException) { // App code
-//                }
-//
-//            })
-//
-//    }
+    private fun facebookLogin(){
+        binding.fbLoginButton.setPermissions(arrayListOf(EMAIL))
+        callbackManager = CallbackManager.Factory.create()
+        binding.fbLoginButton.registerCallback(callbackManager,
+            object : FacebookCallback<LoginResult?> {
+                override fun onSuccess(loginResult: LoginResult?) {
+
+
+                }
+
+                override fun onCancel() {
+                    Toast.makeText(
+                        applicationContext,
+                        "Something Went wrong",
+                        Toast.LENGTH_SHORT
+                    ).show()
+                }
+
+                override fun onError(error: FacebookException?) {
+                    Toast.makeText(
+                        applicationContext,
+                        "Something Went wrong",
+                        Toast.LENGTH_SHORT
+                    ).show()
+                }
+
+            })
+        callbackManager = CallbackManager.Factory.create()
+        LoginManager.getInstance().registerCallback(callbackManager,
+            object : FacebookCallback<LoginResult?> {
+                override fun onSuccess(loginResult: LoginResult?) {
+                    val accessToken = AccessToken.getCurrentAccessToken()
+                    if (accessToken != null && !accessToken.isExpired) {
+                        var intent =
+                            Intent(applicationContext, LoginDetailsActivity::class.java)
+                        var id: String? = loginResult?.accessToken?.userId
+                        var photoUrl : String ? = "https://graph.facebook.com/" + loginResult?.accessToken?.userId + "/picture?return_ssl_resources=1"
+                        intent.putExtra("id", id)
+                        intent.putExtra("photo",photoUrl)
+                        startActivity(intent)
+                    }
+
+                }
+
+                override fun onCancel() { // App code
+                }
+
+                override fun onError(exception: FacebookException) { // App code
+                }
+
+            })
+
+    }
 
 
 }
